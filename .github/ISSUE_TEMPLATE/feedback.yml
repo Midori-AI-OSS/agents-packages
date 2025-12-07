@@ -1,0 +1,42 @@
+name: Game Feedback
+description: Share your thoughts, suggestions, or general feedback about the Midori AI Endless Autofighter.
+labels: [feedback, enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thank you for playing Midori AI Endless Autofighter!
+        Please use this form to provide feedback, suggestions, or ideas for improvement.
+
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Feedback
+      description: What do you like, dislike, or want to see improved?
+      placeholder: Share your thoughts here...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area of Feedback
+      description: Which part of the game does your feedback relate to?
+      options:
+        - Gameplay
+        - User Interface
+        - Balance
+        - Performance
+        - Art/Audio
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Additional Details
+      description: Any screenshots, videos, or extra context?
+      placeholder: Attach files or add more info here.
+    validations:
+      required: false
