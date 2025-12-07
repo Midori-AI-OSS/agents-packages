@@ -8,16 +8,16 @@ Lightweight helper for reporting run status from Midori AI tooling. Install dire
 
 Python Project Install
 ```bash
-uv add "git+https://github.com/Midori-AI-OSS/State-Reporting"
+uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=state-reporter"
 ```
 
 Temp Venv Install
 ```bash
-uv pip install "git+https://github.com/Midori-AI-OSS/State-Reporting"
+uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=state-reporter"
 ```
 
 ### Pip
 
 ```bash
-pip install "git+https://github.com/Midori-AI-OSS/State-Reporting"
+pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=state-reporter"
 ```
