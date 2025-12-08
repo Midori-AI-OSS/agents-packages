@@ -3,7 +3,7 @@ name = "midori-ai-media-vault"
 version = "0.1.0"
 description = "Encrypted media storage with Pydantic models for agent systems"
 authors = [{ name = "Midori AI" }]
-requires-python = "~=3.13.0"
+requires-python = ">=3.11,<3.15"
 dependencies = [
     "pydantic>=2.0.0",
     "cryptography>=41.0.0",

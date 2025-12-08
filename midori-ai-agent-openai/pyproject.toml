@@ -3,7 +3,7 @@ name = "midori-ai-agent-openai"
 version = "0.1.0"
 description = "OpenAI Agents SDK implementation of the Midori AI agent protocol"
 authors = [{ name = "Midori AI" }]
-requires-python = "~=3.13.0"
+requires-python = ">=3.11,<3.15"
 dependencies = [
     "openai>=1.88.0",
     "openai-agents>=0.3.3",

@@ -3,7 +3,7 @@ name = "midori-ai-reranker"
 version = "0.1.0"
 description = "LangChain-powered reranking utilities for Midori AI vector storage"
 authors = [{ name = "Midori AI" }]
-requires-python = "~=3.13.0"
+requires-python = ">=3.11,<3.15"
 dependencies = [
     "midori-ai-vector-manager",
     "midori-ai-agent-base",
