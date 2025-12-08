@@ -14,9 +14,7 @@ This demo showcases:
 - **Local Inference**: 100% local setup examples using Hugging Face models
 
 ## What This Is NOT
-
-❌ Production-ready code for Carly-AGI's main processing loop  
-❌ A replacement for existing `reasoning.py` or `queue_prossesing_reply.py`  
+ 
 ❌ Performance-optimized for critical workloads  
 ❌ Hardened for mission-critical systems  
 
