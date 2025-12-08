@@ -3,7 +3,7 @@ name = "midori-ai-agent-base"
 version = "0.1.0"
 description = "Common protocol and data models for Midori AI agent backends"
 authors = [{ name = "Midori AI" }]
-requires-python = "~=3.13.0"
+requires-python = ">=3.11,<3.15"
 dependencies = [
     "midori_ai_logger",
     "midori-ai-agent-langchain",

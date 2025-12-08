@@ -3,7 +3,7 @@ name = "midori-ai-agent-context-manager"
 version = "0.1.0"
 description = "Context management for Midori AI agent backends with Pydantic persistence"
 authors = [{ name = "Midori AI" }]
-requires-python = "~=3.13.0"
+requires-python = ">=3.11,<3.15"
 dependencies = [
     "pydantic>=2.0.0",
     "aiofiles>=24.1.0",

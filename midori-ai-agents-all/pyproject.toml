@@ -3,7 +3,7 @@ name = "midori-ai-agents-all"
 version = "0.1.0"
 description = "Meta-package bundling all Midori AI agent packages with embedded documentation"
 authors = [{ name = "Midori AI" }]
-requires-python = "~=3.13.0"
+requires-python = ">=3.11,<3.15"
 dependencies = [
     "midori_ai_logger",
     "midori-ai-agent-base",

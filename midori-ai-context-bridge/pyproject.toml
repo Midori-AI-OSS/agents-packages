@@ -3,7 +3,7 @@ name = "midori-ai-context-bridge"
 version = "0.1.0"
 description = "Persistent thinking cache with ChromaDB storage and time-based memory decay"
 authors = [{ name = "Midori AI" }]
-requires-python = "~=3.13.0"
+requires-python = ">=3.11,<3.15"
 dependencies = [
     "midori_ai_logger",
     "midori_ai_vector_manager",
