@@ -15,12 +15,6 @@
 - **Long-term storage**: Optional `disable_time_gating` flag for permanent knowledge storage
 - **100% async-friendly**: All operations are async-compatible
 
-## Installation
-
-```bash
-uv add midori-ai-vector-manager
-```
-
 ## API Reference
 
 ### Enums
