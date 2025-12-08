@@ -1,0 +1,51 @@
+[project]
+name = "midori-ai-agents-all"
+version = "0.1.0"
+description = "Meta-package bundling all Midori AI agent packages with embedded documentation"
+authors = [{ name = "Midori AI" }]
+requires-python = "~=3.13.0"
+dependencies = [
+    "midori_ai_logger",
+    "midori-ai-agent-base",
+    "midori-ai-agent-context-manager",
+    "midori-ai-agent-huggingface",
+    "midori-ai-agent-langchain",
+    "midori-ai-agent-openai",
+    "midori-ai-compactor",
+    "midori-ai-context-bridge",
+    "midori-ai-media-lifecycle",
+    "midori-ai-media-request",
+    "midori-ai-media-vault",
+    "midori-ai-mood-engine",
+    "midori-ai-reranker",
+    "midori-ai-vector-manager",
+]
+
+[tool.uv.sources]
+midori_ai_logger = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "logger" }
+midori-ai-agent-base = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-agent-base" }
+midori-ai-agent-context-manager = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-agent-context-manager" }
+midori-ai-agent-huggingface = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-agent-huggingface" }
+midori-ai-agent-langchain = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-agent-langchain" }
+midori-ai-agent-openai = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-agent-openai" }
+midori-ai-compactor = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-compactor" }
+midori-ai-context-bridge = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-context-bridge" }
+midori-ai-media-lifecycle = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-media-lifecycle" }
+midori-ai-media-request = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-media-request" }
+midori-ai-media-vault = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-media-vault" }
+midori-ai-mood-engine = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-mood-engine" }
+midori-ai-reranker = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-reranker" }
+midori-ai-vector-manager = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-vector-manager" }
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=1.1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["midori_ai_agents_all"]

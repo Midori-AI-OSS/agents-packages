@@ -1,0 +1,37 @@
+[project]
+name = "midori-ai-reranker"
+version = "0.1.0"
+description = "LangChain-powered reranking utilities for Midori AI vector storage"
+authors = [{ name = "Midori AI" }]
+requires-python = "~=3.13.0"
+dependencies = [
+    "midori-ai-vector-manager",
+    "midori-ai-agent-base",
+    "langchain>=0.1.0",
+    "langchain-community>=0.1.0",
+    "langchain-core>=0.1.0",
+    "langchain-openai>=0.1.0",
+    "langchain-ollama>=0.1.0",
+    "langchain-localai>=0.1.0",
+    "langchain-huggingface>=0.1.0",
+    "midori_ai_logger",
+]
+
+[tool.uv.sources]
+midori_ai_logger = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "logger" }
+midori-ai-vector-manager = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-vector-manager" }
+midori-ai-agent-base = { git = "https://github.com/Midori-AI-OSS/agents-packages", subdirectory = "midori-ai-agent-base" }
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=1.1.0",
+    "ruff>=0.14.7",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["midori_ai_reranker"]
