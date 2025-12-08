@@ -1,10 +1,8 @@
-<p align="center">
-  <a href="https://io.midori-ai.xyz/">
-    <img src="https://tea-cup.midori-ai.xyz/download/logo_color1.png" alt="Midori AI" width="400" />
-  </a>
-</p>
+# Agents Python Package Monorepo
 
-<p align="center"><strong>Midori AI Agents</strong> is a collection of Python packages for building AI agent systems.</p>
+[![Midori AI photo](https://tea-cup.midori-ai.xyz/download/logo_color1.png)](https://io.midori-ai.xyz/)
+
+**Midori AI Agents** is a collection of Python packages for building LRM agents systems.
 
 ---
 
