@@ -30,7 +30,7 @@ The Swarm Manager uses **three levels** of task dispatch based on execution spee
 ```json
 {
   "prompt": "Coder, please work on task file {taskfile}. This is a simple task requiring fast execution.",
-  "cwd": "/home/lunamidori/nfsshares/Midori-AI-Github/Midori-AI-Mono-Repo/Endless-Autofighter",
+  "cwd": "/path/to/repository",
   "sandbox": "workspace-write",
   "approval-policy": "never",
   "include-plan-tool": true,
@@ -57,7 +57,7 @@ The Swarm Manager uses **three levels** of task dispatch based on execution spee
 ```json
 {
   "prompt": "Coder, please work on task file {taskfile}. This is a standard task requiring balanced execution.",
-  "cwd": "/home/lunamidori/nfsshares/Midori-AI-Github/Midori-AI-Mono-Repo/Endless-Autofighter",
+  "cwd": "/path/to/repository",
   "sandbox": "workspace-write",
   "approval-policy": "never",
   "include-plan-tool": true,
@@ -84,7 +84,7 @@ The Swarm Manager uses **three levels** of task dispatch based on execution spee
 ```json
 {
   "prompt": "Coder, please work on task file {taskfile}. This is a complex task requiring deep reasoning and careful analysis.",
-  "cwd": "/home/lunamidori/nfsshares/Midori-AI-Github/Midori-AI-Mono-Repo/Endless-Autofighter",
+  "cwd": "/path/to/repository",
   "sandbox": "workspace-write",
   "approval-policy": "never",
   "include-plan-tool": true,
@@ -174,7 +174,7 @@ Below is the complete parameter schema for the Codex MCP tool (`mcp_codexmcp_cod
 ```json
 {
   "prompt": "Coder, please work on task file .codex/tasks/wip/chars/1234abcd-fix-battle-logic.md. This is a standard task requiring balanced execution.",
-  "cwd": "/home/lunamidori/nfsshares/Midori-AI-Github/Midori-AI-Mono-Repo/Endless-Autofighter",
+  "cwd": "/path/to/repository",
   "sandbox": "workspace-write",
   "approval-policy": "never",
   "include-plan-tool": true,

@@ -1,11 +1,11 @@
 
 # Coder Mode
 
-> **Note:** All contributor mode documentation and related process notes must be placed in the `.codex/instructions/` folder within the relevant service directory (e.g., `frontend/.codex/instructions/`, `backend/.codex/instructions/`). Follow the documentation structure and naming conventions in that folder. See examples in each service's `.codex/instructions/`.
+> **Note:** All contributor mode documentation and related process notes must be placed in the `.codex/instructions/` folder. Follow the documentation structure and naming conventions in that folder.
 
 
 ## Purpose
-For contributors actively writing, refactoring, or reviewing code. Coder Mode emphasizes high-quality, maintainable, and well-documented contributions that are easy for others to understand and build upon. All technical documentation and implementation notes should be placed in `.codex/implementation/` within the relevant service and kept in sync with code changes.
+For contributors actively writing, refactoring, or reviewing code. Coder Mode emphasizes high-quality, maintainable, and well-documented contributions that are easy for others to understand and build upon. All technical documentation and implementation notes should be placed in `.codex/implementation/` and kept in sync with code changes.
 
 
 ## Guidelines
@@ -15,10 +15,9 @@ For contributors actively writing, refactoring, or reviewing code. Coder Mode em
 - Regularly review the `.codex/tasks/wip/` folder for new or assigned tasks, and pick up work from there as requested by the Task Master or project leads.
 - Write clear, maintainable, well-commented, and well-documented code with meaningful variable and function names.
 - Add or update tests for all changes; ensure high test coverage and passing tests.
-- Re-run only the tests affected by your change. Use the commands in `run-tests.sh` as your baseline and scope them to the impacted area—e.g., backend checks with `uv run pytest tests/test_battle.py -k scenario_name` or node IDs like `uv run pytest tests/test_battle.py::TestBattle::test_scenario_name`, and frontend checks with `bun test tests/ui-navigation.test.js` or focused runs such as `bun x vitest run ui-navigation --run`. When the repository's `run-tests.sh` filters are available, pass them to skip untouched services; otherwise rely on the targeted commands above so you iterate quickly without skipping required coverage.
-- Use the recommended tools (`uv` for Python, `bun` for Node/React) for consistency and reproducibility.
-- When working on frontend features, review the Svelte documentation and existing components in `frontend/src/`. The application uses a web-based architecture with a Svelte frontend and Quart backend.
-- Keep documentation in sync with code changes; update or create docs in `.codex/implementation/` and `.codex/instructions/` in the relevant service as needed. For relics, cards, and passives, treat the plugin modules as the canonical source—keep their `about` copy and docstrings accurate instead of duplicating entries in `.codex/implementation/relic-system.md` or other summary references.
+- Re-run only the tests affected by your change. Use the commands in `run-tests.sh` or test scripts as your baseline and scope them to the impacted area—e.g., `uv run pytest tests/test_specific.py -k test_name` or node IDs like `uv run pytest tests/test_module.py::TestClass::test_method`. When targeted test filters are available, use them to iterate quickly without skipping required coverage.
+- Use the recommended tools (`uv` for Python, `bun` for Node/React if needed) for consistency and reproducibility.
+- Keep documentation in sync with code changes; update or create docs in `.codex/implementation/` and `.codex/instructions/` as needed. Treat plugin modules and core components as the canonical source—keep their docstrings and inline documentation accurate.
 - Update documentation in `.codex/implementation/` and `.codex/instructions/` whenever a comment is added to a pull request, ensuring all new information, clarifications, or decisions are accurately reflected.
 - Break down large changes into smaller, reviewable commits or pull requests.
 - Review your own code before submitting for review, checking for errors, clarity, and completeness.
