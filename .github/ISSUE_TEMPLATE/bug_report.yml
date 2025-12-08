@@ -1,19 +1,19 @@
 name: Bug Report
-description: Report a bug or unexpected behavior in Midori AI Endless Autofighter.
+description: Report a bug or unexpected behavior in `Agents-Packages` or any package included in this collection.
 labels: [bug]
 body:
   - type: markdown
     attributes:
       value: |
-        ## Bug Report
-        Please fill out this form to help us fix the issue.
+        ## Bug Report — Agents-Packages
+        Please fill out this form to help us identify and fix the issue. When possible, include the package name (e.g. `midori-ai-agent-base`) and path.
 
   - type: textarea
     id: summary
     attributes:
       label: Bug Summary
-      description: Briefly describe the bug.
-      placeholder: What happened?
+      description: Briefly describe the bug, and mention which package it affects.
+      placeholder: What happened? (include package name)
     validations:
       required: true
 
@@ -21,8 +21,8 @@ body:
     id: steps
     attributes:
       label: Steps to Reproduce
-      description: List the steps to reproduce the bug.
-      placeholder: 1. ... 2. ... 3. ...
+      description: List the steps to reproduce the bug. Include commands, package path, and minimal repro if possible.
+      placeholder: 1. git clone ... 2. cd package/ 3. run ...
     validations:
       required: true
 
@@ -39,7 +39,7 @@ body:
     id: actual
     attributes:
       label: Actual Behavior
-      description: What actually happened?
+      description: What actually happened? Include error messages and stack traces where available.
       placeholder: Describe what went wrong.
     validations:
       required: true
@@ -48,8 +48,8 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: OS, browser, device, or other relevant info.
-      placeholder: e.g. Windows 11, Chrome 120, Steam Deck
+      description: OS, Python/node version, package version (if applicable), and any other relevant info.
+      placeholder: e.g. Ubuntu 22.04, Python 3.11, `midori-ai-agent-base` v0.1.2
     validations:
       required: false
 
@@ -57,7 +57,7 @@ body:
     id: logs
     attributes:
       label: Relevant Logs or Screenshots
-      description: Paste logs, error messages, or attach screenshots if possible.
+      description: Paste logs, error messages, or attach screenshots and failure traces if possible.
       placeholder: Drag and drop files or paste logs here.
     validations:
       required: false

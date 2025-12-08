@@ -1,19 +1,19 @@
-name: Game Feedback
-description: Share your thoughts, suggestions, or general feedback about the Midori AI Endless Autofighter.
+name: Agents-Packages Feedback
+description: Share suggestions, ideas, or general feedback about the `Agents-Packages` collection in the `Carly-AGI` monorepo.
 labels: [feedback, enhancement]
 body:
   - type: markdown
     attributes:
       value: |
-        ## Thank you for playing Midori AI Endless Autofighter!
-        Please use this form to provide feedback, suggestions, or ideas for improvement.
+        ## Thank you for using `Agents-Packages`!
+        Please use this form to provide feedback, suggestions, or ideas for improvement related to the packages in this repository.
 
   - type: textarea
     id: feedback
     attributes:
       label: Feedback
-      description: What do you like, dislike, or want to see improved?
-      placeholder: Share your thoughts here...
+      description: Which package or area does your feedback relate to? (e.g. `midori-ai-agent-base`, logging, docs)
+      placeholder: Share your thoughts here, including package name and path if applicable.
     validations:
       required: true
 
@@ -21,13 +21,13 @@ body:
     id: area
     attributes:
       label: Area of Feedback
-      description: Which part of the game does your feedback relate to?
+      description: Which part of the packages does your feedback relate to?
       options:
-        - Gameplay
-        - User Interface
-        - Balance
+        - Documentation
+        - Functionality
+        - Packaging / Distribution
+        - Tests
         - Performance
-        - Art/Audio
         - Other
     validations:
       required: true
@@ -36,7 +36,7 @@ body:
     id: details
     attributes:
       label: Additional Details
-      description: Any screenshots, videos, or extra context?
-      placeholder: Attach files or add more info here.
+      description: Any logs, repro steps, or extra context (include commands, package name, and file paths).
+      placeholder: Paste logs, file paths, or additional context here.
     validations:
       required: false
