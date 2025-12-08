@@ -5,8 +5,14 @@ Meta-package bundling all Midori AI agent packages with embedded documentation. 
 ## Install from Git
 
 ### UV
+Python Project Install
 ```bash
 uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-agents-all"
+```
+
+Temp Venv Install
+```bash
+uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-agents-all"
 ```
 
 ### Pip
