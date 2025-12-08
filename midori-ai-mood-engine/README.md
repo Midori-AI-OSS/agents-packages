@@ -1,11 +1,25 @@
 # midori-ai-mood-engine
 
-Comprehensive mood engine with hormone simulation, loneliness tracking, and energy modeling.
+Comprehensive mood engine with hormone simulation, loneliness tracking, and energy modeling. Install directly from the repo using `git+`.
 
-## Installation
+## Install from Git
+
+### UV
+
+Python Project Install
+```bash
+uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-mood-engine"
+```
+
+Temp Venv Install
+```bash
+uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-mood-engine"
+```
+
+### Pip
 
 ```bash
-uv add midori-ai-mood-engine
+pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-mood-engine"
 ```
 
 ## Quick Start

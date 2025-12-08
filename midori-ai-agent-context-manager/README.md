@@ -1,6 +1,6 @@
 # Midori AI Agent Context Manager
 
-Context management for Midori AI agent backends with Pydantic persistence.
+Context management for Midori AI agent backends with Pydantic persistence. Install directly from the repo using `git+`.
 
 ## Features
 
@@ -12,10 +12,24 @@ Context management for Midori AI agent backends with Pydantic persistence.
 - **Summary support**: Store conversation summaries for long-running sessions
 - **Auto-compression**: Automatic memory compression when context window limits are approached
 
-## Installation
+## Install from Git
+
+### UV
+
+Python Project Install
+```bash
+uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-agent-context-manager"
+```
+
+Temp Venv Install
+```bash
+uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-agent-context-manager"
+```
+
+### Pip
 
 ```bash
-uv add midori-ai-agent-context-manager
+pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-agent-context-manager"
 ```
 
 ## Quick Start

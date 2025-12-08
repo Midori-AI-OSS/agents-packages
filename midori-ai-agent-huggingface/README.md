@@ -20,18 +20,18 @@ This package runs LLM inference locally, which requires significant resources:
 
 Python Project Install:
 ```bash
-uv add "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-agent-huggingface"
+uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-agent-huggingface"
 ```
 
 Temp Venv Install:
 ```bash
-uv pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-agent-huggingface"
+uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-agent-huggingface"
 ```
 
 ### Pip
 
 ```bash
-pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-agent-huggingface"
+pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-agent-huggingface"
 ```
 
 ### Optional Dependencies
@@ -42,7 +42,7 @@ For GPU support and quantization:
 pip install torch
 
 # 8-bit/4-bit quantization
-uv add "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-agent-huggingface[quantization]"
+uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-agent-huggingface[quantization]"
 ```
 
 See [docs.md](docs.md) for detailed usage documentation.
