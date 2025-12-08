@@ -11,12 +11,6 @@ Comprehensive mood management system with hormone simulation, loneliness trackin
 - **Self-Retraining**: PyTorch model learns from feedback, adjusts response curves based on observed mood outcomes
 - **Profile Configuration**: Gender, age, modifier intensity, feature toggles
 
-## Installation
-
-```bash
-uv add midori-ai-mood-engine
-```
-
 ## Core Concepts
 
 ### MoodEngine
