@@ -8,16 +8,18 @@ Type-safe request/response protocol for media parsing. Install directly from the
 
 Python Project Install
 ```bash
-uv add "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-media-request"
+uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-media-request"
 ```
 
 Temp Venv Install
 ```bash
-uv pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-media-request"
+uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-media-request"
 ```
 
 ### Pip
 
 ```bash
-pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-media-request"
+pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-media-request"
 ```
+
+See [docs.md](docs.md) for detailed documentation.

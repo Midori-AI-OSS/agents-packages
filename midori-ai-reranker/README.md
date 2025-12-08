@@ -10,16 +10,18 @@ All embedding providers (OpenAI, Ollama, LocalAI, HuggingFace) are included by d
 
 Python Project Install
 ```bash
-uv add "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-reranker"
+uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-reranker"
 ```
 
 Temp Venv Install
 ```bash
-uv pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-reranker"
+uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-reranker"
 ```
 
 ### Pip
 
 ```bash
-pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-reranker"
+pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-reranker"
 ```
+
+See [docs.md](docs.md) for detailed documentation.

@@ -8,16 +8,18 @@ Reusable vector storage with ChromaDB backend for Midori AI packages. Install di
 
 Python Project Install
 ```bash
-uv add "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-vector-manager"
+uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-vector-manager"
 ```
 
 Temp Venv Install
 ```bash
-uv pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-vector-manager"
+uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-vector-manager"
 ```
 
 ### Pip
 
 ```bash
-pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-vector-manager"
+pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-vector-manager"
 ```
+
+See [docs.md](docs.md) for detailed documentation.

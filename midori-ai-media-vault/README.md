@@ -8,16 +8,18 @@ Encrypted media storage with Pydantic models. Install directly from the repo usi
 
 Python Project Install
 ```bash
-uv add "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-media-vault"
+uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-media-vault"
 ```
 
 Temp Venv Install
 ```bash
-uv pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-media-vault"
+uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-media-vault"
 ```
 
 ### Pip
 
 ```bash
-pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-media-vault"
+pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-media-vault"
 ```
+
+See [docs.md](docs.md) for detailed documentation.
