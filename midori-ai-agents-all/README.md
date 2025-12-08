@@ -13,3 +13,5 @@ uv add "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=mi
 ```bash
 pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-agents-all"
 ```
+
+See [docs.md](docs.md) for detailed documentation.

@@ -21,3 +21,5 @@ uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdire
 ```bash
 pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-media-request"
 ```
+
+See [docs.md](docs.md) for detailed documentation.

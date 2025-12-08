@@ -22,25 +22,4 @@ uv pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdire
 pip install "git+https://github.com/Midori-AI-OSS/agents-packages.git#subdirectory=midori-ai-compactor"
 ```
 
-## Quick Start
-
-```python
-from midori_ai_compactor import ThinkingCompactor
-from midori_ai_agent_base import get_agent
-
-# Create the agent for consolidation
-agent = await get_agent(
-    backend="langchain",
-    model="your-model",
-    api_key="your-key",
-)
-
-# Create compactor with agent
-compactor = ThinkingCompactor(agent=agent)
-
-# Consolidate multiple model outputs into a single message
-outputs = ["Analysis from model 1", "Analysis from model 2"]
-consolidated = await compactor.compact(outputs)
-```
-
-See `docs.md` for detailed documentation and usage examples.
+See [docs.md](docs.md) for detailed documentation and usage examples.
