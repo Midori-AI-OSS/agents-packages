@@ -40,18 +40,6 @@ This package wraps LangChain's document transformers with a Midori AI-friendly i
 - **Async-first** - Use LangChain's async methods (`ainvoke`, `afrom_texts`)
 - **BYOB (Bring Your Own Backend)** - Users provide their own embedding/LLM endpoints
 
-## Installation
-
-All embedding providers (OpenAI, Ollama, LocalAI, HuggingFace) are included by default.
-
-```bash
-# Using UV
-uv add "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-reranker"
-
-# Using Pip
-pip install "git+https://github.com/Midori-AI-OSS/Carly-AGI#subdirectory=Rest-Servers/packages/midori-ai-reranker"
-```
-
 ## Basic Usage
 
 ### Production Pattern
