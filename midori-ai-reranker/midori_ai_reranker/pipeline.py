@@ -13,7 +13,7 @@ from .filters.redundant import RedundantFilter
 from .filters.relevance import RelevanceFilter
 
 
-logger = MidoriAiLogger(__name__)
+logger = MidoriAiLogger(name="Reranker")
 
 
 class FilterPipeline:
