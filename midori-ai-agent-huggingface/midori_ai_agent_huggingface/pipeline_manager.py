@@ -98,7 +98,7 @@ class PipelineManager:
             device = self._get_device()
             torch_dtype = self._get_torch_dtype()
 
-            model_kwargs: dict[str, Any] = {"trust_remote_code": self._config.trust_remote_code}
+            model_kwargs: dict[str, Any] = {}
 
             if torch_dtype != "auto":
                 model_kwargs["torch_dtype"] = torch_dtype
