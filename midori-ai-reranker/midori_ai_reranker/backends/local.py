@@ -2,8 +2,8 @@
 
 from typing import Optional
 
-from langchain_classic.retrievers import ContextualCompressionRetriever
-from langchain_classic.retrievers.document_compressors.base import DocumentCompressorPipeline
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors.base import DocumentCompressorPipeline
 from langchain_community.vectorstores import InMemoryVectorStore
 from langchain_core.embeddings import Embeddings
 

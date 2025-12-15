@@ -1,7 +1,7 @@
 """Relevance filter wrapper for EmbeddingsFilter."""
 
 
-from langchain_classic.retrievers.document_compressors.embeddings_filter import EmbeddingsFilter
+from langchain.retrievers.document_compressors.embeddings_filter import EmbeddingsFilter
 from langchain_core.embeddings import Embeddings
 
 
