@@ -10,7 +10,7 @@ from langchain_core.embeddings import Embeddings
 from midori_ai_logger import MidoriAiLogger
 
 
-logger = MidoriAiLogger(__name__)
+logger = MidoriAiLogger(channel=None, name=__name__)
 
 
 class LocalReranker:

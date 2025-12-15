@@ -152,9 +152,9 @@ Structured logging across all components.
 
 **Example:**
 ```python
-from midori_ai_logger import MidoriAILogger
+from midori_ai_logger import MidoriAiLogger
 
-logger = MidoriAILogger()
+logger = MidoriAiLogger(channel=None, name="midori-ai-agents-demo")
 logger.info("Processing started")
 logger.error("Error occurred", extra={"detail": "..."})
 ```

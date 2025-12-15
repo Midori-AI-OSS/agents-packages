@@ -48,7 +48,7 @@ class BaseStage(ABC):
             logger: Optional logger instance (creates one if not provided)
         """
         self._enabled = enabled
-        self._logger = logger or MidoriAiLogger()
+        self._logger = logger or MidoriAiLogger(channel=None, name=__name__)
 
     @property
     @abstractmethod

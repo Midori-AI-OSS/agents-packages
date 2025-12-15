@@ -73,12 +73,12 @@ class ReasoningPipeline:
         """
         self._agent = agent
         self._config = config or PipelineConfig()
-        self._logger = logger or MidoriAiLogger()
+        self._logger = logger or MidoriAiLogger(channel=None, name=__name__)
         self._cache = cache or MemoryCache()
         self._metrics = MetricsCollector() if self._config.enable_metrics else None
         self._compactor = compactor or ThinkingCompactor(agent=agent)
         self._reranker = reranker or RerankerPipeline()
-        self._logger.info("Initialized ReasoningPipeline with configuration")
+        self._logger.rprint("Initialized ReasoningPipeline with configuration")
 
         self._stages = self._create_stages()
 
@@ -128,7 +128,7 @@ class ReasoningPipeline:
         if isinstance(request, str):
             request = PipelineRequest(prompt=request)
 
-        self._logger.info(f"Processing request: {request.prompt[:100]}...")
+        self._logger.rprint(f"Processing request: {request.prompt[:100]}...")
 
         tracer = Tracer() if self._config.enable_tracing else None
 
@@ -163,7 +163,7 @@ class ReasoningPipeline:
 
         final_response = final_result.output or "No response generated"
 
-        self._logger.info(f"Pipeline complete in {total_duration_ms:.2f}ms, final response: {len(final_response)} chars")
+        self._logger.rprint(f"Pipeline complete in {total_duration_ms:.2f}ms, final response: {len(final_response)} chars")
 
         response = PipelineResponse(final_response=final_response, stages=context.previous_results, total_duration_ms=total_duration_ms, request=request, cache_hits=cache_hits)
 
