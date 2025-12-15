@@ -53,6 +53,7 @@ jobs:
           uv sync --all-extras
 
       - name: Run integration test
+        id: run-test
         run: |
           cd midori-ai-agent-huggingface
           uv run python tests/integration_test.py
@@ -62,7 +63,7 @@ jobs:
       - name: Report test status
         if: always()
         run: |
-          if [ $? -eq 0 ]; then
+          if [ "${{ steps.run-test.outcome }}" == "success" ]; then
             echo "✓ Integration test passed successfully"
           else
             echo "✗ Integration test failed"
