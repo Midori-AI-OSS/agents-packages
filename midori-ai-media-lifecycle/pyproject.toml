@@ -1,6 +1,6 @@
 [project]
 name = "midori-ai-media-lifecycle"
-version = "0.1.0"
+version = "0.1.1"
 description = "Time-based lifecycle management for media objects with decay and cleanup"
 authors = [{ name = "Midori AI" }]
 requires-python = ">=3.11,<3.15"

@@ -1,6 +1,6 @@
 [project]
 name = "midori-ai-media-request"
-version = "0.1.0"
+version = "0.1.1"
 description = "Type-safe request/response protocol for media parsing in agent systems"
 authors = [{ name = "Midori AI" }]
 requires-python = ">=3.11,<3.15"

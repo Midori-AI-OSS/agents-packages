@@ -48,4 +48,4 @@ from .pipeline import ReasoningPipeline
 
 __all__ = ["CacheStrategy", "load_pipeline_config", "PipelineConfig", "PipelineRequest", "PipelineResponse", "ReasoningPipeline", "StageContext", "StageResult", "StageStatus", "StageType"]
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"

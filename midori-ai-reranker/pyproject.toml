@@ -1,6 +1,6 @@
 [project]
 name = "midori-ai-reranker"
-version = "0.1.0"
+version = "0.1.1"
 description = "LangChain-powered reranking utilities for Midori AI vector storage"
 authors = [{ name = "Midori AI" }]
 requires-python = ">=3.11,<3.15"

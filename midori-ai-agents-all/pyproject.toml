@@ -1,6 +1,6 @@
 [project]
 name = "midori-ai-agents-all"
-version = "0.1.0"
+version = "0.1.1"
 description = "Meta-package bundling all Midori AI agent packages with embedded documentation"
 authors = [{ name = "Midori AI" }]
 requires-python = ">=3.11,<3.15"

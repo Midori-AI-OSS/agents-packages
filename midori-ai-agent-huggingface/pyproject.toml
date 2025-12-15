@@ -1,6 +1,6 @@
 [project]
 name = "midori-ai-agent-huggingface"
-version = "0.1.0"
+version = "0.1.1"
 description = "Hugging Face local inference implementation of the Midori AI agent protocol"
 authors = [{ name = "Midori AI" }]
 requires-python = ">=3.11,<3.15"

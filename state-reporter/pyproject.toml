@@ -1,6 +1,6 @@
 [project]
 name = "state-reporter"
-version = "0.1.0"
+version = "0.1.1"
 description = "State reporting library for Midori AI services"
 authors = [{ name = "Midori AI" }]
 requires-python = ">=3.11,<3.15"
