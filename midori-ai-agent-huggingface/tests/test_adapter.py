@@ -140,6 +140,7 @@ class TestHuggingFaceLocalAgentAsync:
     async def test_invoke_success(self) -> None:
         with patch("midori_ai_agent_huggingface.adapter.PipelineManager") as mock_manager:
             mock_instance = MagicMock()
+            mock_instance.load_pipeline = AsyncMock()
             mock_instance.generate.return_value = "Hello response"
             mock_instance.parse_response.return_value = None
             mock_manager.return_value = mock_instance
@@ -150,10 +151,12 @@ class TestHuggingFaceLocalAgentAsync:
 
             assert response.response == "Hello response"
             mock_instance.generate.assert_called_once()
+            mock_instance.load_pipeline.assert_called_once()
 
     async def test_invoke_with_memory(self) -> None:
         with patch("midori_ai_agent_huggingface.adapter.PipelineManager") as mock_manager:
             mock_instance = MagicMock()
+            mock_instance.load_pipeline = AsyncMock()
             mock_instance.generate.return_value = "Response with context"
             mock_instance.parse_response.return_value = None
             mock_manager.return_value = mock_instance
@@ -173,6 +176,7 @@ class TestHuggingFaceLocalAgentAsync:
     async def test_invoke_with_tools(self) -> None:
         with patch("midori_ai_agent_huggingface.adapter.PipelineManager") as mock_manager:
             mock_instance = MagicMock()
+            mock_instance.load_pipeline = AsyncMock()
             mock_instance.generate.return_value = "Tool response"
             mock_instance.parse_response.return_value = None
             mock_manager.return_value = mock_instance
@@ -195,6 +199,7 @@ class TestHuggingFaceLocalAgentAsync:
     async def test_invoke_with_tools_dict_format(self) -> None:
         with patch("midori_ai_agent_huggingface.adapter.PipelineManager") as mock_manager:
             mock_instance = MagicMock()
+            mock_instance.load_pipeline = AsyncMock()
             mock_instance.generate.return_value = "Tool response"
             mock_instance.parse_response.return_value = None
             mock_manager.return_value = mock_instance
@@ -233,7 +238,9 @@ class TestHuggingFaceLocalAgentLogging:
                 mock_logger_class.return_value = mock_logger
 
                 mock_instance = MagicMock()
+                mock_instance.load_pipeline = AsyncMock()
                 mock_instance.generate.return_value = "Test response"
+                mock_instance.parse_response.return_value = None
                 mock_manager.return_value = mock_instance
 
                 agent = HuggingFaceLocalAgent(model="test-model")
@@ -252,7 +259,9 @@ class TestHuggingFaceLocalAgentLogging:
                 mock_logger_class.return_value = mock_logger
 
                 mock_instance = MagicMock()
+                mock_instance.load_pipeline = AsyncMock()
                 mock_instance.generate.return_value = "Tool response"
+                mock_instance.parse_response.return_value = None
                 mock_manager.return_value = mock_instance
 
                 agent = HuggingFaceLocalAgent(model="test-model")
@@ -393,6 +402,7 @@ class TestHuggingFaceLocalAgentReasoningAsync:
     async def test_invoke_extracts_reasoning(self) -> None:
         with patch("midori_ai_agent_huggingface.adapter.PipelineManager") as mock_manager:
             mock_instance = MagicMock()
+            mock_instance.load_pipeline = AsyncMock()
             mock_instance.generate.return_value = "<think>Let me analyze this.</think>The answer is 42."
             mock_instance.parse_response.return_value = None
             mock_manager.return_value = mock_instance
@@ -407,6 +417,7 @@ class TestHuggingFaceLocalAgentReasoningAsync:
     async def test_invoke_with_tools_extracts_reasoning(self) -> None:
         with patch("midori_ai_agent_huggingface.adapter.PipelineManager") as mock_manager:
             mock_instance = MagicMock()
+            mock_instance.load_pipeline = AsyncMock()
             mock_instance.generate.return_value = "<reasoning>I should search for this.</reasoning>Based on my search, here is the answer."
             mock_instance.parse_response.return_value = None
             mock_manager.return_value = mock_instance
@@ -482,6 +493,7 @@ class TestHuggingFaceLocalAgentToolInvoke:
     async def test_invoke_includes_tool_calls(self) -> None:
         with patch("midori_ai_agent_huggingface.adapter.PipelineManager") as mock_manager:
             mock_instance = MagicMock()
+            mock_instance.load_pipeline = AsyncMock()
             mock_instance.generate.return_value = 'Let me search. TOOL_CALL: search(query=test)'
             mock_instance.parse_response.return_value = None
             mock_manager.return_value = mock_instance
@@ -498,6 +510,7 @@ class TestHuggingFaceLocalAgentToolInvoke:
     async def test_invoke_with_tools_includes_instruction(self) -> None:
         with patch("midori_ai_agent_huggingface.adapter.PipelineManager") as mock_manager:
             mock_instance = MagicMock()
+            mock_instance.load_pipeline = AsyncMock()
             mock_instance.generate.return_value = "TOOL_CALL: search(query=test)"
             mock_instance.parse_response.return_value = None
             mock_manager.return_value = mock_instance

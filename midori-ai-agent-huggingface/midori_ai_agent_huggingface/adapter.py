@@ -289,6 +289,8 @@ class HuggingFaceLocalAgent(MidoriAiAgentProtocol):
         """
         await self._logger.print(f"Invoking HuggingFace local agent for session {payload.session_id}", mode="debug")
 
+        await self._pipeline_manager.load_pipeline()
+
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(self._executor, self._sync_invoke, payload)
 
@@ -309,6 +311,8 @@ class HuggingFaceLocalAgent(MidoriAiAgentProtocol):
             AgentResponse with thinking, response, and any tool calls made.
         """
         await self._logger.print(f"Invoking HuggingFace local agent with tools for session {payload.session_id}", mode="debug")
+
+        await self._pipeline_manager.load_pipeline()
 
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(self._executor, self._sync_invoke_with_tools, payload, tools)
