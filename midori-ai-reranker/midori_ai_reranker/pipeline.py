@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from langchain_classic.retrievers.document_compressors.base import DocumentCompressorPipeline
+from langchain.retrievers.document_compressors.base import DocumentCompressorPipeline
 from langchain_core.embeddings import Embeddings
 
 from midori_ai_logger import MidoriAiLogger
