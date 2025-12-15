@@ -258,9 +258,6 @@ Uses `asyncio.Lock` and reference counting to ensure:
 
 ## Troubleshooting
 
-### Pipeline Not Loaded Error
-**Fixed in latest version:** The "Pipeline not loaded" error has been resolved. The adapter now automatically loads the pipeline before any inference call, so you don't need to manually call `load_pipeline()`. This ensures seamless operation for both `invoke()` and `invoke_with_tools()` methods.
-
 ### Out of Memory
 - Use a smaller model
 - Enable quantization (`load_in_8bit=True` or `load_in_4bit=True`)
@@ -275,9 +272,3 @@ Uses `asyncio.Lock` and reference counting to ensure:
 - Verify the model name on HuggingFace Hub
 - Check internet connection for first download
 - Some models require `trust_remote_code=True`
-
-## Changelog
-
-### Recent Fixes
-- **Pipeline Loading:** Fixed RuntimeError where pipeline wasn't loaded before `generate()` calls. The adapter now ensures the pipeline is loaded in both `invoke()` and `invoke_with_tools()` methods before any inference, preventing the "Pipeline not loaded. Call load_pipeline() first." error.
-- **Integration Testing:** Added GitHub Actions workflow for integration testing with real models to catch similar issues early.
