@@ -287,3 +287,25 @@ class TestOpenAIAgentsAdapterLogging:
                 mock_logger.print.assert_called()
                 call_args = mock_logger.print.call_args
                 assert call_args[1].get("mode") == "debug"
+
+
+class TestUsagePatch:
+    """Tests for the Usage class patch that handles None detail fields."""
+
+    def test_usage_with_none_detail_fields(self) -> None:
+        """Test that Usage can be created with None for input_tokens_details and output_tokens_details."""
+        from agents.usage import Usage
+        usage = Usage(requests=1, input_tokens=100, output_tokens=50, total_tokens=150, input_tokens_details=None, output_tokens_details=None)
+        assert usage.input_tokens_details is not None
+        assert usage.output_tokens_details is not None
+        assert usage.input_tokens_details.cached_tokens == 0
+        assert usage.output_tokens_details.reasoning_tokens == 0
+
+    def test_usage_with_explicit_detail_fields(self) -> None:
+        """Test that Usage still works with explicit detail field values."""
+        from agents.usage import Usage
+        from openai.types.responses.response_usage import InputTokensDetails
+        from openai.types.responses.response_usage import OutputTokensDetails
+        usage = Usage(requests=1, input_tokens=200, output_tokens=100, total_tokens=300, input_tokens_details=InputTokensDetails(cached_tokens=50), output_tokens_details=OutputTokensDetails(reasoning_tokens=20))
+        assert usage.input_tokens_details.cached_tokens == 50
+        assert usage.output_tokens_details.reasoning_tokens == 20

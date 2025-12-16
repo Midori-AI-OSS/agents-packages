@@ -8,7 +8,10 @@ from agents import Runner
 from agents import RunConfig
 from agents import ModelSettings
 from agents.models.openai_provider import OpenAIProvider
+from agents.usage import Usage
 
+from openai.types.responses.response_usage import InputTokensDetails
+from openai.types.responses.response_usage import OutputTokensDetails
 from openai.types.shared import Reasoning
 
 from midori_ai_logger import MidoriAiLogger
@@ -19,6 +22,37 @@ from midori_ai_agent_base.models import MemoryEntryData
 from midori_ai_agent_base.protocol import MidoriAiAgentProtocol
 
 from .session import OpenAIAgentSession
+
+
+_original_usage_init = Usage.__init__
+
+
+def _patched_usage_init(self: Usage, requests: int = 0, input_tokens: int = 0, input_tokens_details: Optional[InputTokensDetails] = None, output_tokens: int = 0, output_tokens_details: Optional[OutputTokensDetails] = None, total_tokens: int = 0) -> None:
+    """Patched __init__ for Usage to handle None values for detail fields.
+    
+    This patch fixes a Pydantic validation error that occurs when openai-agents library
+    receives API responses with None values for input_tokens_details or output_tokens_details.
+    Some OpenAI-compatible backends (Ollama, LocalAI, older OpenAI API versions) don't
+    provide these optional fields, which causes the error:
+    
+        Error: 2 validation errors for Usage
+        input_tokens_details
+          Input should be a valid dictionary or instance of InputTokensDetails
+        output_tokens_details
+          Input should be a valid dictionary or instance of OutputTokensDetails
+    
+    This patch replaces None values with properly initialized default instances to prevent
+    the validation errors while maintaining compatibility with backends that do provide
+    these fields.
+    """
+    if input_tokens_details is None:
+        input_tokens_details = InputTokensDetails(cached_tokens=0)
+    if output_tokens_details is None:
+        output_tokens_details = OutputTokensDetails(reasoning_tokens=0)
+    _original_usage_init(self, requests=requests, input_tokens=input_tokens, input_tokens_details=input_tokens_details, output_tokens=output_tokens, output_tokens_details=output_tokens_details, total_tokens=total_tokens)
+
+
+Usage.__init__ = _patched_usage_init
 
 
 class OpenAIAgentsAdapter(MidoriAiAgentProtocol):

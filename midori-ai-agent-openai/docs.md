@@ -47,6 +47,23 @@ The `OpenAIAgentsAdapter` accepts the following parameters:
 - 100% async using `Runner.run_async()`
 - Tool binding support via `invoke_with_tools()`
 - Integrated logging via `midori_ai_logger`
+- Includes a compatibility patch for the `Usage` class to handle `None` values in `input_tokens_details` and `output_tokens_details` fields, preventing Pydantic validation errors when using backends that don't provide these optional fields
+
+## Known Issues and Fixes
+
+### Usage Type Validation Errors
+
+The `openai-agents` library's `Usage` type expects `input_tokens_details` and `output_tokens_details` to be valid dictionary or model instances. Some OpenAI-compatible backends (like Ollama, LocalAI, or older OpenAI API versions) may return `None` for these fields, causing Pydantic validation errors:
+
+```
+Error: 2 validation errors for Usage
+input_tokens_details
+  Input should be a valid dictionary or instance of InputTokensDetails
+output_tokens_details
+  Input should be a valid dictionary or instance of OutputTokensDetails
+```
+
+This package includes an automatic fix that monkey-patches the `Usage.__init__` method to replace `None` values with properly initialized default instances (`InputTokensDetails(cached_tokens=0)` and `OutputTokensDetails(reasoning_tokens=0)`). This patch is applied automatically when the adapter module is imported.
 
 ## Reference
 
