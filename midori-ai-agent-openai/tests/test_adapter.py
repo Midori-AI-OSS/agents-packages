@@ -309,3 +309,115 @@ class TestUsagePatch:
         usage = Usage(requests=1, input_tokens=200, output_tokens=100, total_tokens=300, input_tokens_details=InputTokensDetails(cached_tokens=50), output_tokens_details=OutputTokensDetails(reasoning_tokens=20))
         assert usage.input_tokens_details.cached_tokens == 50
         assert usage.output_tokens_details.reasoning_tokens == 20
+
+
+@pytest.mark.asyncio
+class TestOpenAIAgentsAdapterNoneContentRegression:
+    """Regression tests for handling None content in reasoning and message items."""
+
+    async def test_invoke_with_reasoning_item_none_content(self) -> None:
+        """Regression test: verify reasoning_item with None content doesn't cause TypeError."""
+        with patch("midori_ai_agent_openai.adapter.Runner") as mock_runner:
+            mock_item = MagicMock()
+            mock_item.type = "reasoning_item"
+            mock_raw_item = MagicMock()
+            mock_raw_item.content = None
+            mock_item.raw_item = mock_raw_item
+            mock_result = MagicMock()
+            mock_result.final_output = "Response"
+            mock_result.new_items = [mock_item]
+            mock_runner.run = AsyncMock(return_value=mock_result)
+
+            adapter = OpenAIAgentsAdapter(model="test-model", api_key="test-key")
+            payload = AgentPayload(user_message="Hello", thinking_blob="", system_context="", user_profile={}, tools_available=[], session_id="s1")
+            response = await adapter.invoke(payload)
+
+            assert response.response == "Response"
+            assert response.thinking == ""
+
+    async def test_invoke_with_message_output_item_none_content(self) -> None:
+        """Regression test: verify message_output_item with None content doesn't cause TypeError."""
+        with patch("midori_ai_agent_openai.adapter.Runner") as mock_runner:
+            mock_item = MagicMock()
+            mock_item.type = "message_output_item"
+            mock_raw_item = MagicMock()
+            mock_raw_item.content = None
+            mock_item.raw_item = mock_raw_item
+            mock_result = MagicMock()
+            mock_result.final_output = "Response"
+            mock_result.new_items = [mock_item]
+            mock_runner.run = AsyncMock(return_value=mock_result)
+
+            adapter = OpenAIAgentsAdapter(model="test-model", api_key="test-key")
+            payload = AgentPayload(user_message="Hello", thinking_blob="", system_context="", user_profile={}, tools_available=[], session_id="s1")
+            response = await adapter.invoke(payload)
+
+            assert response.response == "Response"
+
+    async def test_invoke_with_both_items_none_content(self) -> None:
+        """Regression test: verify both reasoning and message items with None content work together."""
+        with patch("midori_ai_agent_openai.adapter.Runner") as mock_runner:
+            mock_reasoning_item = MagicMock()
+            mock_reasoning_item.type = "reasoning_item"
+            mock_reasoning_raw = MagicMock()
+            mock_reasoning_raw.content = None
+            mock_reasoning_item.raw_item = mock_reasoning_raw
+            mock_message_item = MagicMock()
+            mock_message_item.type = "message_output_item"
+            mock_message_raw = MagicMock()
+            mock_message_raw.content = None
+            mock_message_item.raw_item = mock_message_raw
+            mock_result = MagicMock()
+            mock_result.final_output = "Response"
+            mock_result.new_items = [mock_reasoning_item, mock_message_item]
+            mock_runner.run = AsyncMock(return_value=mock_result)
+
+            adapter = OpenAIAgentsAdapter(model="test-model", api_key="test-key")
+            payload = AgentPayload(user_message="Hello", thinking_blob="", system_context="", user_profile={}, tools_available=[], session_id="s1")
+            response = await adapter.invoke(payload)
+
+            assert response.response == "Response"
+            assert response.thinking == ""
+
+    async def test_invoke_with_reasoning_item_valid_content(self) -> None:
+        """Test that reasoning_item with valid content still works correctly."""
+        with patch("midori_ai_agent_openai.adapter.Runner") as mock_runner:
+            mock_content_item = MagicMock()
+            mock_content_item.text = "Thinking deeply"
+            mock_item = MagicMock()
+            mock_item.type = "reasoning_item"
+            mock_raw_item = MagicMock()
+            mock_raw_item.content = [mock_content_item]
+            mock_item.raw_item = mock_raw_item
+            mock_result = MagicMock()
+            mock_result.final_output = "Response"
+            mock_result.new_items = [mock_item]
+            mock_runner.run = AsyncMock(return_value=mock_result)
+
+            adapter = OpenAIAgentsAdapter(model="test-model", api_key="test-key")
+            payload = AgentPayload(user_message="Hello", thinking_blob="", system_context="", user_profile={}, tools_available=[], session_id="s1")
+            response = await adapter.invoke(payload)
+
+            assert response.response == "Response"
+            assert response.thinking == "Thinking deeply"
+
+    async def test_invoke_with_message_output_item_valid_content(self) -> None:
+        """Test that message_output_item with valid content still works correctly."""
+        with patch("midori_ai_agent_openai.adapter.Runner") as mock_runner:
+            mock_content_item = MagicMock()
+            mock_content_item.text = "Additional response"
+            mock_item = MagicMock()
+            mock_item.type = "message_output_item"
+            mock_raw_item = MagicMock()
+            mock_raw_item.content = [mock_content_item]
+            mock_item.raw_item = mock_raw_item
+            mock_result = MagicMock()
+            mock_result.final_output = "Main response"
+            mock_result.new_items = [mock_item]
+            mock_runner.run = AsyncMock(return_value=mock_result)
+
+            adapter = OpenAIAgentsAdapter(model="test-model", api_key="test-key")
+            payload = AgentPayload(user_message="Hello", thinking_blob="", system_context="", user_profile={}, tools_available=[], session_id="s1")
+            response = await adapter.invoke(payload)
+
+            assert response.response == "Main response Additional response"

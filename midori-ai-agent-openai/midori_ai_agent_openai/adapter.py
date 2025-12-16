@@ -193,7 +193,7 @@ class OpenAIAgentsAdapter(MidoriAiAgentProtocol):
 
                 if item_type == "reasoning_item":
                     raw_item = getattr(item, "raw_item", None)
-                    if raw_item and hasattr(raw_item, "content"):
+                    if raw_item and hasattr(raw_item, "content") and raw_item.content is not None:
                         for content_item in raw_item.content:
                             text = getattr(content_item, "text", "")
                             if text:
@@ -201,7 +201,7 @@ class OpenAIAgentsAdapter(MidoriAiAgentProtocol):
 
                 elif item_type == "message_output_item":
                     raw_item = getattr(item, "raw_item", None)
-                    if raw_item and hasattr(raw_item, "content"):
+                    if raw_item and hasattr(raw_item, "content") and raw_item.content is not None:
                         for content_item in raw_item.content:
                             text = getattr(content_item, "text", "")
                             if text:
