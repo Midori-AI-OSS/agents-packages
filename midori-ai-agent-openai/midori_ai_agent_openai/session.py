@@ -5,7 +5,6 @@ session-based memory management, allowing both in-memory and SQLite-based
 persistence options.
 """
 
-from pathlib import Path
 
 from typing import Any
 from typing import Optional
