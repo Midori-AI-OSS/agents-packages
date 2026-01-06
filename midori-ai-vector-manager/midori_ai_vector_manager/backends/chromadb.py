@@ -5,13 +5,29 @@ with support for text and multimodal (image) content.
 """
 
 import asyncio
+import hashlib
 import time
 import uuid
+
+from uuid import UUID
 
 import chromadb
 
 from typing import Any
 from typing import Optional
+from typing import Sequence
+
+from chromadb.api.models.AsyncCollection import AsyncCollection
+from chromadb.api.types import Documents
+from chromadb.api.types import Embeddings
+from chromadb.api.types import EmbeddingFunction
+from chromadb.api.types import GetResult
+from chromadb.api.types import IDs
+from chromadb.api.types import Include
+from chromadb.api.types import Metadatas
+from chromadb.api.types import QueryResult
+from chromadb.api.types import Where
+from chromadb.api.types import WhereDocument
 
 from midori_ai_logger import MidoriAiLogger
 
@@ -22,6 +38,123 @@ from ..protocol import VectorStoreProtocol
 
 
 _logger = MidoriAiLogger(None, name="VectorManager")
+
+
+class SimpleHashEmbeddingFunction(EmbeddingFunction[Documents]):
+    """Simple embedding function that creates deterministic embeddings from text hashes.
+    
+    This is a fallback embedding function that doesn't require model downloads.
+    It generates 384-dimensional embeddings (matching MiniLM) using a hash-based approach.
+    While not semantically meaningful, it provides consistent, deterministic embeddings
+    suitable for testing and environments without internet access.
+    """
+
+    def __init__(self) -> None:
+        """Initialize the simple hash embedding function."""
+        pass
+
+    def __call__(self, input: Documents) -> Embeddings:
+        """Generate hash-based embeddings for documents.
+        
+        Args:
+            input: List of documents to embed
+            
+        Returns:
+            List of 384-dimensional embedding vectors
+        """
+        embeddings = []
+        for doc in input:
+            doc_bytes = doc.encode('utf-8')
+            hash_obj = hashlib.sha384(doc_bytes)
+            hash_bytes = hash_obj.digest()
+            embedding = [float(b) / 255.0 - 0.5 for b in hash_bytes]
+            while len(embedding) < 384:
+                hash_obj = hashlib.sha384(hash_obj.digest())
+                hash_bytes = hash_obj.digest()
+                embedding.extend([float(b) / 255.0 - 0.5 for b in hash_bytes])
+            embeddings.append(embedding[:384])
+        return embeddings
+
+    @staticmethod
+    def name() -> str:
+        """Return the name of this embedding function."""
+        return "simple_hash"
+
+    def get_config(self) -> dict[str, Any]:
+        """Return the configuration of this embedding function."""
+        return {}
+
+    @staticmethod
+    def build_from_config(config: dict[str, Any]) -> "SimpleHashEmbeddingFunction":
+        """Build an instance from configuration."""
+        return SimpleHashEmbeddingFunction()
+
+
+class AsyncClientAdapter:
+    """Adapter to make sync ChromaDB clients work with AsyncCollection.
+    
+    This adapter wraps PersistentClient or EphemeralClient and provides
+    the async interface expected by AsyncCollection, using asyncio.to_thread()
+    internally to handle the sync operations without blocking the event loop.
+    """
+
+    def __init__(self, sync_client: Any) -> None:
+        """Initialize the adapter with a sync client.
+        
+        Args:
+            sync_client: A PersistentClient or EphemeralClient instance
+        """
+        self._sync_client = sync_client
+
+    async def _count(self, collection_id: UUID, tenant: Optional[str] = None, database: Optional[str] = None) -> int:
+        """Async wrapper for count operation."""
+        return await asyncio.to_thread(self._sync_client._count, collection_id)
+
+    async def _add(self, collection_id: UUID, ids: IDs, embeddings: Embeddings, metadatas: Optional[Metadatas] = None, documents: Optional[Documents] = None, uris: Optional[Any] = None, tenant: Optional[str] = None, database: Optional[str] = None) -> bool:
+        """Async wrapper for add operation."""
+        return await asyncio.to_thread(self._sync_client._add, ids=ids, collection_id=collection_id, embeddings=embeddings, metadatas=metadatas, documents=documents, uris=uris)
+
+    async def _get(self, collection_id: UUID, ids: Optional[IDs] = None, where: Optional[Where] = None, sort: Optional[str] = None, limit: Optional[int] = None, offset: Optional[int] = None, page: Optional[int] = None, page_size: Optional[int] = None, where_document: Optional[WhereDocument] = None, include: Include = ["embeddings", "metadatas", "documents"], tenant: Optional[str] = None, database: Optional[str] = None) -> GetResult:
+        """Async wrapper for get operation."""
+        return await asyncio.to_thread(self._sync_client._get, collection_id=collection_id, ids=ids, where=where, limit=limit, offset=offset, where_document=where_document, include=include)
+
+    async def _query(self, collection_id: UUID, query_embeddings: Embeddings, ids: Optional[IDs] = None, n_results: int = 10, where: Optional[Where] = None, where_document: Optional[WhereDocument] = None, include: Include = ["embeddings", "metadatas", "documents", "distances"], tenant: Optional[str] = None, database: Optional[str] = None) -> QueryResult:
+        """Async wrapper for query operation."""
+        return await asyncio.to_thread(self._sync_client._query, collection_id=collection_id, query_embeddings=query_embeddings, ids=ids, n_results=n_results, where=where, where_document=where_document, include=include)
+
+    async def _update(self, collection_id: UUID, ids: IDs, embeddings: Optional[Embeddings] = None, metadatas: Optional[Metadatas] = None, documents: Optional[Documents] = None, uris: Optional[Any] = None, tenant: Optional[str] = None, database: Optional[str] = None) -> bool:
+        """Async wrapper for update operation."""
+        return await asyncio.to_thread(self._sync_client._update, collection_id=collection_id, ids=ids, embeddings=embeddings, metadatas=metadatas, documents=documents, uris=uris)
+
+    async def _upsert(self, collection_id: UUID, ids: IDs, embeddings: Embeddings, metadatas: Optional[Metadatas] = None, documents: Optional[Documents] = None, uris: Optional[Any] = None, tenant: Optional[str] = None, database: Optional[str] = None) -> bool:
+        """Async wrapper for upsert operation."""
+        return await asyncio.to_thread(self._sync_client._upsert, ids=ids, collection_id=collection_id, embeddings=embeddings, metadatas=metadatas, documents=documents, uris=uris)
+
+    async def _delete(self, collection_id: UUID, ids: Optional[IDs] = None, where: Optional[Where] = None, where_document: Optional[WhereDocument] = None, tenant: Optional[str] = None, database: Optional[str] = None) -> Sequence[UUID]:
+        """Async wrapper for delete operation."""
+        return await asyncio.to_thread(self._sync_client._delete, collection_id=collection_id, ids=ids, where=where, where_document=where_document)
+
+    def get_or_create_collection(self, name: str, metadata: Optional[dict[str, Any]] = None, embedding_function: Optional[Any] = None) -> Any:
+        """Sync wrapper to get or create collection."""
+        return self._sync_client.get_or_create_collection(name=name, metadata=metadata, embedding_function=embedding_function)
+
+    def delete_collection(self, name: str) -> None:
+        """Sync wrapper to delete collection."""
+        self._sync_client.delete_collection(name=name)
+
+    def create_async_collection(self, sync_collection: Any, embedding_function: Optional[Any] = None) -> AsyncCollection:
+        """Create an AsyncCollection from a sync collection.
+        
+        Args:
+            sync_collection: The sync collection to wrap
+            embedding_function: Optional embedding function (uses sync_collection's if not provided)
+            
+        Returns:
+            AsyncCollection instance
+        """
+        if embedding_function is None:
+            embedding_function = sync_collection._embedding_function
+        return AsyncCollection(client=self, model=sync_collection._model, embedding_function=embedding_function, data_loader=None)
 
 
 def generate_time_based_id() -> str:
@@ -52,7 +185,7 @@ class ChromaVectorStore(VectorStoreProtocol):
                 - None: Uses ephemeral in-memory storage
                 - str: Uses the specified path
             embedding_function: Optional custom embedding function.
-                If None, ChromaDB uses its default embeddings (CPU-based, can be slow).
+                If None, uses SimpleHashEmbeddingFunction (no downloads required).
             disable_time_gating: If True, disables time-based ID generation and timestamp
                 metadata for long-term storage. Entries will use simple UUIDs instead.
                 Default is False to maintain backward compatibility.
@@ -60,11 +193,10 @@ class ChromaVectorStore(VectorStoreProtocol):
         Note:
             The embedding function cannot be changed after a persistent storage
             is created. If you need different embeddings, use a different
-            persist_directory or collection_name. The default ChromaDB embeddings
-            run on CPU and may be slow for large datasets.
+            persist_directory or collection_name.
             
-            All ChromaDB operations are wrapped with asyncio.to_thread() to prevent
-            blocking the event loop, as ChromaDB's sync API is blocking.
+            This implementation uses ChromaDB's native async API through AsyncCollection,
+            with an adapter layer to bridge sync client initialization and async operations.
         """
         self._collection_name = collection_name
         self._disable_time_gating = disable_time_gating
@@ -72,17 +204,22 @@ class ChromaVectorStore(VectorStoreProtocol):
         if persist_directory == "default":
             persist_path = DEFAULT_PERSIST_PATH / "chromadb"
             persist_path.mkdir(parents=True, exist_ok=True)
-            self._client = chromadb.PersistentClient(path=str(persist_path))
+            sync_client = chromadb.PersistentClient(path=str(persist_path))
         elif persist_directory is None:
-            self._client = chromadb.EphemeralClient()
+            sync_client = chromadb.EphemeralClient()
         else:
-            self._client = chromadb.PersistentClient(path=persist_directory)
+            sync_client = chromadb.PersistentClient(path=persist_directory)
 
-        collection_kwargs: dict[str, Any] = {"name": collection_name, "metadata": {"hnsw:space": "cosine"}}
-        if embedding_function is not None:
-            collection_kwargs["embedding_function"] = embedding_function
+        self._client_adapter = AsyncClientAdapter(sync_client)
+        if embedding_function is None:
+            embedding_function = SimpleHashEmbeddingFunction()
+            _logger.rprint("Using SimpleHashEmbeddingFunction (no internet connection required)", mode="debug")
+        
+        self._embedding_function = embedding_function
+        collection_kwargs: dict[str, Any] = {"name": collection_name, "metadata": {"hnsw:space": "cosine"}, "embedding_function": embedding_function}
 
-        self._collection = self._client.get_or_create_collection(**collection_kwargs)
+        sync_collection = self._client_adapter.get_or_create_collection(**collection_kwargs)
+        self._collection = self._client_adapter.create_async_collection(sync_collection)
         _logger.rprint(f"Initialized ChromaVectorStore collection: {collection_name}", mode="debug")
 
     async def store(self, text: str, sender: Optional[SenderType] = None, metadata: Optional[dict[str, Any]] = None) -> VectorEntry:
@@ -104,7 +241,7 @@ class ChromaVectorStore(VectorStoreProtocol):
             timestamp = time.time()
         entry = VectorEntry(id=entry_id, text=text, timestamp=timestamp, sender=sender, metadata=metadata or {})
         chroma_metadata = entry.to_chromadb_metadata()
-        await asyncio.to_thread(self._collection.add, ids=[entry_id], documents=[text], metadatas=[chroma_metadata])
+        await self._collection.add(ids=[entry_id], documents=[text], metadatas=[chroma_metadata])
         _logger.rprint(f"Stored entry {entry_id} in collection {self._collection_name}", mode="debug")
         return entry
 
@@ -117,7 +254,7 @@ class ChromaVectorStore(VectorStoreProtocol):
         Returns:
             The VectorEntry if found, None otherwise
         """
-        results = await asyncio.to_thread(self._collection.get, ids=[entry_id], include=["documents", "metadatas"])
+        results = await self._collection.get(ids=[entry_id], include=["documents", "metadatas"])
         if not results or not results["ids"]:
             return None
         doc = results["documents"][0] if results["documents"] else ""
@@ -135,10 +272,10 @@ class ChromaVectorStore(VectorStoreProtocol):
             List of matching VectorEntry objects
         """
         if not filters:
-            results = await asyncio.to_thread(self._collection.get, limit=limit, include=["documents", "metadatas"])
+            results = await self._collection.get(limit=limit, include=["documents", "metadatas"])
         else:
             where_filter = self._build_where_filter(filters)
-            results = await asyncio.to_thread(self._collection.get, where=where_filter, limit=limit, include=["documents", "metadatas"])
+            results = await self._collection.get(where=where_filter, limit=limit, include=["documents", "metadatas"])
         return self._results_to_entries(results)
 
     async def search_similar(self, query_text: str, limit: int = 10) -> list[VectorEntry]:
@@ -151,7 +288,7 @@ class ChromaVectorStore(VectorStoreProtocol):
         Returns:
             List of VectorEntry objects ranked by similarity
         """
-        results = await asyncio.to_thread(self._collection.query, query_texts=[query_text], n_results=limit, include=["documents", "metadatas"])
+        results = await self._collection.query(query_texts=[query_text], n_results=limit, include=["documents", "metadatas"])
         return self._query_results_to_entries(results)
 
     async def delete(self, entry_ids: list[str]) -> int:
@@ -165,18 +302,19 @@ class ChromaVectorStore(VectorStoreProtocol):
         """
         if not entry_ids:
             return 0
-        await asyncio.to_thread(self._collection.delete, ids=entry_ids)
+        await self._collection.delete(ids=entry_ids)
         _logger.rprint(f"Deleted {len(entry_ids)} entries from collection {self._collection_name}", mode="debug")
         return len(entry_ids)
 
     async def count(self) -> int:
         """Return total entry count."""
-        return await asyncio.to_thread(self._collection.count)
+        return await self._collection.count()
 
     async def clear(self) -> None:
         """Clear all entries from the store."""
-        await asyncio.to_thread(self._client.delete_collection, name=self._collection_name)
-        self._collection = await asyncio.to_thread(self._client.get_or_create_collection, name=self._collection_name, metadata={"hnsw:space": "cosine"})
+        self._client_adapter.delete_collection(name=self._collection_name)
+        sync_collection = self._client_adapter.get_or_create_collection(name=self._collection_name, metadata={"hnsw:space": "cosine"}, embedding_function=self._embedding_function)
+        self._collection = self._client_adapter.create_async_collection(sync_collection)
         _logger.rprint(f"Cleared collection {self._collection_name}", mode="debug")
 
     def _build_where_filter(self, filters: dict[str, Any]) -> dict[str, Any]:
@@ -241,14 +379,16 @@ class ChromaMultimodalStore:
         if persist_directory == "default":
             persist_path = DEFAULT_PERSIST_PATH / "chromadb"
             persist_path.mkdir(parents=True, exist_ok=True)
-            self._client = chromadb.PersistentClient(path=str(persist_path))
+            sync_client = chromadb.PersistentClient(path=str(persist_path))
         elif persist_directory is None:
-            self._client = chromadb.EphemeralClient()
+            sync_client = chromadb.EphemeralClient()
         else:
-            self._client = chromadb.PersistentClient(path=persist_directory)
+            sync_client = chromadb.PersistentClient(path=persist_directory)
 
+        self._client_adapter = AsyncClientAdapter(sync_client)
         self._embedding_function = self._get_openclip_embedding()
-        self._collection = self._client.get_or_create_collection(name=collection_name, embedding_function=self._embedding_function, metadata={"hnsw:space": "cosine"})
+        sync_collection = self._client_adapter.get_or_create_collection(name=collection_name, embedding_function=self._embedding_function, metadata={"hnsw:space": "cosine"})
+        self._collection = self._client_adapter.create_async_collection(sync_collection)
 
     def _get_openclip_embedding(self) -> Any:
         """Get OpenCLIP embedding function for multimodal support."""
@@ -272,7 +412,7 @@ class ChromaMultimodalStore:
         entry_id = generate_time_based_id()
         timestamp = time.time()
         entry_metadata: dict[str, Any] = {"timestamp": timestamp, **(metadata or {})}
-        await asyncio.to_thread(self._collection.add, ids=[entry_id], images=[image_data], metadatas=[entry_metadata])
+        await self._collection.add(ids=[entry_id], images=[image_data], metadatas=[entry_metadata])
         return VectorEntry(id=entry_id, text="[image]", timestamp=timestamp, sender=None, metadata=metadata or {})
 
     async def query_by_text(self, query_text: str, limit: int = 5) -> list[VectorEntry]:
@@ -285,7 +425,7 @@ class ChromaMultimodalStore:
         Returns:
             List of VectorEntry objects for matching images
         """
-        results = await asyncio.to_thread(self._collection.query, query_texts=[query_text], n_results=limit, include=["metadatas"])
+        results = await self._collection.query(query_texts=[query_text], n_results=limit, include=["metadatas"])
         entries = []
         if results and results["ids"] and results["ids"][0]:
             ids = results["ids"][0]
@@ -298,9 +438,10 @@ class ChromaMultimodalStore:
 
     async def count(self) -> int:
         """Return total image count."""
-        return await asyncio.to_thread(self._collection.count)
+        return await self._collection.count()
 
     async def clear(self) -> None:
         """Clear all images from the store."""
-        await asyncio.to_thread(self._client.delete_collection, name=self._collection_name)
-        self._collection = await asyncio.to_thread(self._client.get_or_create_collection, name=self._collection_name, embedding_function=self._embedding_function, metadata={"hnsw:space": "cosine"})
+        self._client_adapter.delete_collection(name=self._collection_name)
+        sync_collection = self._client_adapter.get_or_create_collection(name=self._collection_name, embedding_function=self._embedding_function, metadata={"hnsw:space": "cosine"})
+        self._collection = self._client_adapter.create_async_collection(sync_collection)
