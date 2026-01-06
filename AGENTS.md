@@ -10,10 +10,29 @@ This document summarizes common development practices for all Python agent packa
   - `modes/`: Authoritative mode guides for all contributor roles. Always read the relevant mode file here before working.
   - `instructions/`: Process notes, mode-specific guidance, and package-level conventions. Keep these synchronized with the latest decisions.
   - `implementation/`: Technical documentation that accompanies code changes. Update these files whenever behavior or architecture shifts.
-  - Other subfolders (e.g., `tasks/`, `notes/`) capture active work and planning. Follow each folder's README or local documentation for details.
+  - `tasks/`: Actionable work items organized by status (wip, review, taskmaster) and category.
+  - `review/`: Review notes from Reviewer mode audits.
+  - `audit/`: Comprehensive audit reports from Auditor mode (long-form records only).
+  - `notes/`: Planning documents, cheat sheets, and contributor working notes.
+  - Other subfolders capture active work and planning. Follow each folder's README or local documentation for details.
 - **Never edit files in `.codex/audit/` unless you are in Auditor mode.**
 - **`.github/`**: Workflow guidelines, CI information, and repository-wide policy files.
 - Individual package directories may include their own documentation. Those files take precedence for the package tree they reside in.
+
+### Documentation Placement Rules
+**CRITICAL: Never create documentation files in the repository root.** All contributor-generated documentation must be placed in `.codex/` following mode-specific requirements:
+
+- **Task Masters**: Create task files in `.codex/tasks/` organized by status (wip, review, taskmaster) and category subfolders. Use random hash prefixes (e.g., `1234abcd-task-title.md`).
+- **Reviewers**: Save review notes in `.codex/review/` with random hash prefixes (e.g., `abcd1234-review-note.md`). Create follow-up tasks in `.codex/tasks/taskmaster/` with `TMT-<hash>-<description>.md` format.
+- **Auditors**: Update task files directly for routine findings. Only create reports in `.codex/audit/` for long-form, multi-task investigations with random hash prefixes (e.g., `abcd1234-audit-summary.audit.md`).
+- **Coders**: Update or create technical documentation in `.codex/implementation/` and `.codex/instructions/` as needed. Keep these in sync with code changes.
+- **Managers**: Maintain mode guides, cheat sheets, and process documentation in `.codex/instructions/` and `.codex/notes/`.
+
+The only exceptions are:
+- Package-specific `README.md` and `docs.md` files within package directories (e.g., `midori-ai-agent-base/README.md`)
+- Repository-level `README.md` and `AGENTS.md` (this file)
+
+Any documentation that does not fit these exceptions must go into the appropriate `.codex/` subfolder based on your contributor mode and the document's purpose.
 
 ---
 
