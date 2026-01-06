@@ -4,6 +4,7 @@ This module provides ChromaDB-backed vector storage implementations
 with support for text and multimodal (image) content.
 """
 
+import asyncio
 import time
 import uuid
 
@@ -61,6 +62,9 @@ class ChromaVectorStore(VectorStoreProtocol):
             is created. If you need different embeddings, use a different
             persist_directory or collection_name. The default ChromaDB embeddings
             run on CPU and may be slow for large datasets.
+            
+            All ChromaDB operations are wrapped with asyncio.to_thread() to prevent
+            blocking the event loop, as ChromaDB's sync API is blocking.
         """
         self._collection_name = collection_name
         self._disable_time_gating = disable_time_gating
@@ -100,7 +104,7 @@ class ChromaVectorStore(VectorStoreProtocol):
             timestamp = time.time()
         entry = VectorEntry(id=entry_id, text=text, timestamp=timestamp, sender=sender, metadata=metadata or {})
         chroma_metadata = entry.to_chromadb_metadata()
-        self._collection.add(ids=[entry_id], documents=[text], metadatas=[chroma_metadata])
+        await asyncio.to_thread(self._collection.add, ids=[entry_id], documents=[text], metadatas=[chroma_metadata])
         _logger.rprint(f"Stored entry {entry_id} in collection {self._collection_name}", mode="debug")
         return entry
 
@@ -113,7 +117,7 @@ class ChromaVectorStore(VectorStoreProtocol):
         Returns:
             The VectorEntry if found, None otherwise
         """
-        results = self._collection.get(ids=[entry_id], include=["documents", "metadatas"])
+        results = await asyncio.to_thread(self._collection.get, ids=[entry_id], include=["documents", "metadatas"])
         if not results or not results["ids"]:
             return None
         doc = results["documents"][0] if results["documents"] else ""
@@ -131,10 +135,10 @@ class ChromaVectorStore(VectorStoreProtocol):
             List of matching VectorEntry objects
         """
         if not filters:
-            results = self._collection.get(limit=limit, include=["documents", "metadatas"])
+            results = await asyncio.to_thread(self._collection.get, limit=limit, include=["documents", "metadatas"])
         else:
             where_filter = self._build_where_filter(filters)
-            results = self._collection.get(where=where_filter, limit=limit, include=["documents", "metadatas"])
+            results = await asyncio.to_thread(self._collection.get, where=where_filter, limit=limit, include=["documents", "metadatas"])
         return self._results_to_entries(results)
 
     async def search_similar(self, query_text: str, limit: int = 10) -> list[VectorEntry]:
@@ -147,7 +151,7 @@ class ChromaVectorStore(VectorStoreProtocol):
         Returns:
             List of VectorEntry objects ranked by similarity
         """
-        results = self._collection.query(query_texts=[query_text], n_results=limit, include=["documents", "metadatas"])
+        results = await asyncio.to_thread(self._collection.query, query_texts=[query_text], n_results=limit, include=["documents", "metadatas"])
         return self._query_results_to_entries(results)
 
     async def delete(self, entry_ids: list[str]) -> int:
@@ -161,18 +165,18 @@ class ChromaVectorStore(VectorStoreProtocol):
         """
         if not entry_ids:
             return 0
-        self._collection.delete(ids=entry_ids)
+        await asyncio.to_thread(self._collection.delete, ids=entry_ids)
         _logger.rprint(f"Deleted {len(entry_ids)} entries from collection {self._collection_name}", mode="debug")
         return len(entry_ids)
 
     async def count(self) -> int:
         """Return total entry count."""
-        return self._collection.count()
+        return await asyncio.to_thread(self._collection.count)
 
     async def clear(self) -> None:
         """Clear all entries from the store."""
-        self._client.delete_collection(name=self._collection_name)
-        self._collection = self._client.get_or_create_collection(name=self._collection_name, metadata={"hnsw:space": "cosine"})
+        await asyncio.to_thread(self._client.delete_collection, name=self._collection_name)
+        self._collection = await asyncio.to_thread(self._client.get_or_create_collection, name=self._collection_name, metadata={"hnsw:space": "cosine"})
         _logger.rprint(f"Cleared collection {self._collection_name}", mode="debug")
 
     def _build_where_filter(self, filters: dict[str, Any]) -> dict[str, Any]:
@@ -268,7 +272,7 @@ class ChromaMultimodalStore:
         entry_id = generate_time_based_id()
         timestamp = time.time()
         entry_metadata: dict[str, Any] = {"timestamp": timestamp, **(metadata or {})}
-        self._collection.add(ids=[entry_id], images=[image_data], metadatas=[entry_metadata])
+        await asyncio.to_thread(self._collection.add, ids=[entry_id], images=[image_data], metadatas=[entry_metadata])
         return VectorEntry(id=entry_id, text="[image]", timestamp=timestamp, sender=None, metadata=metadata or {})
 
     async def query_by_text(self, query_text: str, limit: int = 5) -> list[VectorEntry]:
@@ -281,7 +285,7 @@ class ChromaMultimodalStore:
         Returns:
             List of VectorEntry objects for matching images
         """
-        results = self._collection.query(query_texts=[query_text], n_results=limit, include=["metadatas"])
+        results = await asyncio.to_thread(self._collection.query, query_texts=[query_text], n_results=limit, include=["metadatas"])
         entries = []
         if results and results["ids"] and results["ids"][0]:
             ids = results["ids"][0]
@@ -294,9 +298,9 @@ class ChromaMultimodalStore:
 
     async def count(self) -> int:
         """Return total image count."""
-        return self._collection.count()
+        return await asyncio.to_thread(self._collection.count)
 
     async def clear(self) -> None:
         """Clear all images from the store."""
-        self._client.delete_collection(name=self._collection_name)
-        self._collection = self._client.get_or_create_collection(name=self._collection_name, embedding_function=self._embedding_function, metadata={"hnsw:space": "cosine"})
+        await asyncio.to_thread(self._client.delete_collection, name=self._collection_name)
+        self._collection = await asyncio.to_thread(self._client.get_or_create_collection, name=self._collection_name, embedding_function=self._embedding_function, metadata={"hnsw:space": "cosine"})
