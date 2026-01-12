@@ -8,8 +8,6 @@ This document summarizes common development practices for all Python agent packa
 - **`.feedback/`**: Task lists and priorities. *Read only*—never edit directly.
 - **`.codex/`**:
   - `modes/`: Authoritative mode guides for all contributor roles. Always read the relevant mode file here before working.
-  - `instructions/`: Process notes, mode-specific guidance, and package-level conventions. Keep these synchronized with the latest decisions.
-  - `implementation/`: Technical documentation that accompanies code changes. Update these files whenever behavior or architecture shifts.
   - `tasks/`: Actionable work items organized by status (wip, review, taskmaster) and category.
   - `review/`: Review notes from Reviewer mode audits.
   - `audit/`: Comprehensive audit reports from Auditor mode (long-form records only).
@@ -20,13 +18,13 @@ This document summarizes common development practices for all Python agent packa
 - Individual package directories may include their own documentation. Those files take precedence for the package tree they reside in.
 
 ### Documentation Placement Rules
-**CRITICAL: Never create documentation files in the repository root.** All contributor-generated documentation must be placed in `.codex/` following mode-specific requirements:
+**CRITICAL: Never create documentation files in the repository root.** Prefer the codebase and docstrings as the source of truth. Keep notes minimal and task-scoped.
 
 - **Task Masters**: Create task files in `.codex/tasks/` organized by status (wip, review, taskmaster) and category subfolders. Use random hash prefixes (e.g., `1234abcd-task-title.md`).
-- **Reviewers**: Save review notes in `.codex/review/` with random hash prefixes (e.g., `abcd1234-review-note.md`). Create follow-up tasks in `.codex/tasks/taskmaster/` with `TMT-<hash>-<description>.md` format.
+- **Reviewers**: Save review notes in `/tmp/agents-artifacts/` with random hash prefixes (e.g., `abcd1234-review-note.md`). Create follow-up tasks in `.codex/tasks/taskmaster/` with `TMT-<hash>-<description>.md` format.
 - **Auditors**: Update task files directly for routine findings. Only create reports in `.codex/audit/` for long-form, multi-task investigations with random hash prefixes (e.g., `abcd1234-audit-summary.audit.md`).
-- **Coders**: Update or create technical documentation in `.codex/implementation/` and `.codex/instructions/` as needed. Keep these in sync with code changes.
-- **Managers**: Maintain mode guides, cheat sheets, and process documentation in `.codex/instructions/` and `.codex/notes/`.
+- **Coders**: Keep docstrings accurate and verify behavior before changing code; avoid creating long-lived documentation artifacts unless explicitly requested.
+- **Managers**: Keep contributor guidance short, direct, and consistent across `AGENTS.md` and mode docs.
 
 The only exceptions are:
 - Package-specific `README.md` and `docs.md` files within package directories (e.g., `midori-ai-agent-base/README.md`)
@@ -45,7 +43,7 @@ Any documentation that does not fit these exceptions must go into the appropriat
 - Minimal documentation, minimal logging: prefer reading code and docstrings; do not add docs/logs unless required to diagnose a specific issue or prevent a crash.
 - Do not update `README.md`.
 - For Rust services (if any), use `rustup` and `cargo` for toolchain management.
-- Split large modules into smaller ones when practical and keep documentation in `.codex/implementation` in sync with code.
+- Split large modules into smaller ones when practical.
 - If a build retry occurs, GitHub Actions may emit an automatic commit titled `"Applying previous commit."` This does not replace the need for clear `[TYPE]` commit messages.
 - If coding in Python, ensure code is asynchronous-friendly: avoid blocking the event loop, use `async`/`await` for I/O and long-running tasks, and move CPU-bound work off the main loop (e.g., background tasks or executors).
 - Any test running longer than **15 seconds** in local development should be refactored or scoped down. GitHub Actions CI may enforce different limits, but keep local runs fast.
