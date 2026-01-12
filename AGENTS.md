@@ -39,6 +39,11 @@ Any documentation that does not fit these exceptions must go into the appropriat
 ## Development Basics
 - Use [`uv`](https://github.com/astral-sh/uv) for Python environments and running code. Avoid `python` or `pip` directly.
 - Use [`bun`](https://bun.sh/) for Node/React tooling instead of `npm` or `yarn` (if any JavaScript tooling is needed).
+- Verification-first: confirm current behavior in the codebase before changing code; reproduce/confirm the issue (or missing behavior); verify the fix with clear checks.
+- No broad fallbacks: do not add “fallback behavior everywhere”; only add a narrow fallback when the task explicitly requires it, and justify it.
+- No backward compatibility shims by default: do not preserve old code paths “just in case”; only add compatibility layers when the task explicitly requires it.
+- Minimal documentation, minimal logging: prefer reading code and docstrings; do not add docs/logs unless required to diagnose a specific issue or prevent a crash.
+- Do not update `README.md`.
 - For Rust services (if any), use `rustup` and `cargo` for toolchain management.
 - Split large modules into smaller ones when practical and keep documentation in `.codex/implementation` in sync with code.
 - If a build retry occurs, GitHub Actions may emit an automatic commit titled `"Applying previous commit."` This does not replace the need for clear `[TYPE]` commit messages.
