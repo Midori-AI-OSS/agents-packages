@@ -980,11 +980,6 @@ The `OpenAIAgentsAdapter` accepts the following parameters:
 - 100% async using `Runner.run_async()`
 - Tool binding support via `invoke_with_tools()`
 - Integrated logging via `midori_ai_logger`
-
-## Reference
-
-See the Swarm-o-codex project for advanced agent patterns:
-https://github.com/Midori-AI-OSS/Midori-AI/tree/main/Experimentation/Swarm-o-codex
 """
 
 # midori-ai-compactor docs
