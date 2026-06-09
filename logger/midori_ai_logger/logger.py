@@ -4,6 +4,7 @@ import atexit
 import asyncio
 import aiohttp
 import threading
+import traceback
 
 from typing import Any
 from typing import List
@@ -17,6 +18,30 @@ from .config import DEFAULT_LOG_LEVEL
 from .config import load_logger_config
 from .config import DEFAULT_REQUEST_TIMEOUT
 from .config import DEFAULT_LOGGER_SERVER_URL
+
+
+def _format_log_message(message: object, args: tuple[object, ...]) -> str:
+    if not args:
+        return str(message)
+    try:
+        return str(message) % args
+    except Exception:
+        extras = " ".join(str(arg) for arg in args)
+        return f"{message} {extras}".strip()
+
+
+def _format_log_exc_info(exc_info: object) -> str:
+    if not exc_info:
+        return ""
+    if exc_info is True:
+        details = traceback.format_exc().strip()
+        return "" if details == "NoneType: None" else details
+    if isinstance(exc_info, BaseException):
+        return "".join(traceback.format_exception(type(exc_info), exc_info, exc_info.__traceback__)).strip()
+    if isinstance(exc_info, tuple) and len(exc_info) == 3:
+        exc_type, exc, tb = exc_info
+        return "".join(traceback.format_exception(exc_type, exc, tb)).strip()
+    return ""
 
 
 _GLOBAL_LOGGER_CONFIG = load_logger_config()
@@ -178,6 +203,142 @@ class MidoriAiLogger:
     def rprint(self, message: str, mode: str = "normal") -> None:
         prefix = self.true_print(message, mode)
         self._send_sync(prefix, message, mode)
+
+    def debug(
+        self,
+        message: object,
+        *args: object,
+        exc_info: object = False,
+        stack_info: bool = False,
+        **_: Any,
+    ) -> None:
+        text = _format_log_message(message, args)
+        extras: list[str] = []
+        exc_details = _format_log_exc_info(exc_info)
+        if exc_details:
+            extras.append(exc_details)
+        if stack_info:
+            stack_frames = "".join(traceback.format_stack()[:-1]).strip()
+            if stack_frames:
+                extras.append(stack_frames)
+        if extras:
+            text = "\n".join([text, *extras])
+        self.rprint(text, mode="debug")
+
+    def info(
+        self,
+        message: object,
+        *args: object,
+        exc_info: object = False,
+        stack_info: bool = False,
+        **_: Any,
+    ) -> None:
+        text = _format_log_message(message, args)
+        extras: list[str] = []
+        exc_details = _format_log_exc_info(exc_info)
+        if exc_details:
+            extras.append(exc_details)
+        if stack_info:
+            stack_frames = "".join(traceback.format_stack()[:-1]).strip()
+            if stack_frames:
+                extras.append(stack_frames)
+        if extras:
+            text = "\n".join([text, *extras])
+        self.rprint(text, mode="normal")
+
+    def warning(
+        self,
+        message: object,
+        *args: object,
+        exc_info: object = False,
+        stack_info: bool = False,
+        **_: Any,
+    ) -> None:
+        text = _format_log_message(message, args)
+        extras: list[str] = []
+        exc_details = _format_log_exc_info(exc_info)
+        if exc_details:
+            extras.append(exc_details)
+        if stack_info:
+            stack_frames = "".join(traceback.format_stack()[:-1]).strip()
+            if stack_frames:
+                extras.append(stack_frames)
+        if extras:
+            text = "\n".join([text, *extras])
+        self.rprint(text, mode="warn")
+
+    def warn(
+        self,
+        message: object,
+        *args: object,
+        exc_info: object = False,
+        stack_info: bool = False,
+        **_: Any,
+    ) -> None:
+        self.warning(message, *args, exc_info=exc_info, stack_info=stack_info, **_)
+
+    def error(
+        self,
+        message: object,
+        *args: object,
+        exc_info: object = False,
+        stack_info: bool = False,
+        **_: Any,
+    ) -> None:
+        text = _format_log_message(message, args)
+        extras: list[str] = []
+        exc_details = _format_log_exc_info(exc_info)
+        if exc_details:
+            extras.append(exc_details)
+        if stack_info:
+            stack_frames = "".join(traceback.format_stack()[:-1]).strip()
+            if stack_frames:
+                extras.append(stack_frames)
+        if extras:
+            text = "\n".join([text, *extras])
+        self.rprint(text, mode="error")
+
+    def critical(
+        self,
+        message: object,
+        *args: object,
+        exc_info: object = False,
+        stack_info: bool = False,
+        **_: Any,
+    ) -> None:
+        text = _format_log_message(message, args)
+        extras: list[str] = []
+        exc_details = _format_log_exc_info(exc_info)
+        if exc_details:
+            extras.append(exc_details)
+        if stack_info:
+            stack_frames = "".join(traceback.format_stack()[:-1]).strip()
+            if stack_frames:
+                extras.append(stack_frames)
+        if extras:
+            text = "\n".join([text, *extras])
+        self.rprint(text, mode="error")
+
+    def exception(
+        self,
+        message: object,
+        *args: object,
+        exc_info: object = True,
+        stack_info: bool = False,
+        **_: Any,
+    ) -> None:
+        text = _format_log_message(message, args)
+        extras: list[str] = []
+        exc_details = _format_log_exc_info(exc_info)
+        if exc_details:
+            extras.append(exc_details)
+        if stack_info:
+            stack_frames = "".join(traceback.format_stack()[:-1]).strip()
+            if stack_frames:
+                extras.append(stack_frames)
+        if extras:
+            text = "\n".join([text, *extras])
+        self.rprint(text, mode="error")
 
 
 __all__ = ["MidoriAiLogger", "LogLevel", "close_logger_session"]
